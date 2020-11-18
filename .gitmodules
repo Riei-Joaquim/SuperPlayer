@@ -1,0 +1,3 @@
+[submodule "superplayer-front"]
+	path = superplayer-front
+	url = https://github.com/amb-lucas/superplayer-front
