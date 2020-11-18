@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
-const uri = "mongodb+srv://dbSuperPlayer:bb_rego199@cluster0.f6fff.mongodb.net/test?retryWrites=true&w=majority";
+const authConfig = require("../config/auth");
+const uri = authConfig.uri;
 
-mongoose.connect(uri, {useMongoClient:true});
+mongoose.connect(uri, {useNewUrlParser:true});
 mongoose.Promise = global.Promise;
 
 module.exports = mongoose;
