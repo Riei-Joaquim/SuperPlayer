@@ -2,27 +2,35 @@ const mongoose = require("../index");
 
 const trainerSchema = new mongoose.Schema({
     user:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'user',
-        required:true,
-    },
-    cargo:{
         type:String,
         required:true,
     },
-    sobre:{
+    name:{
         type:String,
         required:true,
     },
-    eu_ensino:{
+    email:{
+        type:String,
+        unique:true,
+        required:true,
+    },
+    role:{
         type:String,
         required:true,
     },
-    eu_cobro:{
+    about:{
         type:String,
         required:true,
     },
-    para_jog:{
+    teaching:{
+        type:String,
+        required:true,
+    },
+    cash:{
+        type:String,
+        required:true,
+    },
+    for_players:{
         type:String,
         required:true,
     },
@@ -30,18 +38,10 @@ const trainerSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
-    desc:{
+    desccription:{
         type:String,
         required:false,
     },
-    comments:[{
-        type:mongoose.Types.ObjectId,
-        ref:'comment',
-    }],
-    requests:[{
-        type:mongoose.Types.ObjectId,
-        ref:'interested',
-    }],
     editedAt:{
         type:Date,
         default:Date.now,

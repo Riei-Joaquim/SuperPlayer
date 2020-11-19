@@ -15,7 +15,7 @@ routes.get("/trainer/:id", APPController.trainerInfo);
 routes.post("/trainer/:id/request", authVerificate, APPController.requestLessons);
 routes.post("/trainer/:id/evaluate", authVerificate, APPController.trainerEvaluate);
 
-routes.post("/trainer/:id/edit", authVerificate, APPController.editProfile);
-routes.get("/trainer/:id/interested", authVerificate, APPController.viewInterested);
+routes.post("/user/trainer/edit", authVerificate, APPController.editProfile);
+routes.get("/user/trainer/requests", authVerificate, APPController.viewInterested);
 
 module.exports = routes;

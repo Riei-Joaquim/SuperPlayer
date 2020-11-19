@@ -10,6 +10,10 @@ const interestedShema = new mongoose.Schema({
         unique:true,
         required:true,
     },
+    assignedTo:{
+        type:String,
+        required:true,
+    },
     observations:{
         type:String,
         required:true,
