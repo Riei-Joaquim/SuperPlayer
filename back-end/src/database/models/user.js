@@ -15,6 +15,9 @@ const UserSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    profileImage:{
+        type:String,
+    },
     trainer:{
         type:Boolean,
         required:true,

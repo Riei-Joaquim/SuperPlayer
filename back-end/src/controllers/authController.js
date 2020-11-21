@@ -1,5 +1,5 @@
 const User = require("../database/models/user");
-const { use } = require("../routes");
+const Trainer = require("../database/models/trainerProfile");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const authConfig = require("../config/auth");
@@ -24,7 +24,7 @@ module.exports = {
                 token:generateToken({id:user.id}), 
             });
         }catch(err){
-            res.status(400).send({error:'Registration failed'});
+            res.status(400).send({error:'Registration failed: ' + err});
         }
     },
 
@@ -45,5 +45,21 @@ module.exports = {
             user, 
             token:generateToken({id:user.id}), 
         });
+    },
+
+    async deleteAccount(req, res){
+        const { id } = req.userId;
+        try{
+            const user = await User.findById(id);
+            if(user.trainer){
+                await Trainer.findOneAndRemove({user:id});
+                await User.findByIdAndRemove(id);
+            }else{
+                await User.findByIdAndRemove(id);
+            }
+            return res.send({status:"OK"});
+        }catch(err){
+            return res.status(400).send({error:'Error in delete user account: ' + err});
+        }
     },
 }  
