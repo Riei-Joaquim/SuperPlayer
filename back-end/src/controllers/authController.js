@@ -3,6 +3,8 @@ const Trainer = require("../database/models/trainerProfile");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const authConfig = require("../config/auth");
+const crypto = require('crypto');
+const mailer = require('../mail/mailer');
 
 function generateToken(params = {}){
     return jwt.sign({id:params}, authConfig.secret, {
@@ -60,6 +62,63 @@ module.exports = {
             return res.send({status:"OK"});
         }catch(err){
             return res.status(400).send({error:'Error in delete user account: ' + err});
+        }
+    },
+
+    async forgotPassword(req, res){
+        const { email } = req.body;
+        try{
+            const user = await User.findOne({email:email});
+
+            if(!user)
+                return res.status(400).send({error:'User not found'});
+
+            const token = crypto.randomBytes(20).toString('hex');
+            const now = new Date();
+            now.setHours(now.getHours() + 1);
+
+            await User.findByIdAndUpdate( user.id, {
+                '$set':{
+                    passwordResetToken:token,
+                    passwordResetExpires:now,
+                }
+            });
+
+            mailer.sendMail({
+                to:email,
+                from: 'requests@SuperPlayer.com.br',
+                template: '../mail/template/forgotPassword',
+                context:{token},
+            }, (err)=>{
+                if(err)
+                    return res.status(400).send({error:'Cannot send forgot password email: ' + err});
+            });
+            res.send();
+
+        }catch(err){
+            return res.status(400).send({error:'Erro in forgot password, try again: ' + err});
+        }
+    },
+
+    async resetPassword(req, res){
+        const { email, token, password} = req.body;
+        try{
+            const user = await User.findOne({email:email}).select('+passwordResetToken passwordResetExpires');
+            if(!user)
+                return res.status(400).send({error:'User not found'});
+
+            if(token != user.passwordResetToken)
+                return res.status(400).send({error:'Token invalid'});
+            
+            const now = new Date()
+            if(now > user.passwordResetExpires)
+                return res.status(400).send({error:'Token expired, generate a new one: '});
+
+            user.password = password;
+            await user.save();
+            res.send();
+        }catch(err){
+            return res.status(400).send({error:'Cannot reset password, try again: ' + err});
         }
     },
 }  

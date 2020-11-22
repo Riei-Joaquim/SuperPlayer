@@ -30,15 +30,35 @@ module.exports = {
       return res.status(400).send({error:'Error in get trainer profile infos: '+ err});
     }
   },
-
+  
   async editProfile(req, res) {
+    const { id } = req.userId;
+    
+    try{
+      User.findByIdAndUpdate(id, {profileImage:req.body.profileImage}, function (err, docs) { 
+        if (err){ 
+          res.status(400).send({error:'Error in update user profile: ' + err})
+        }
+      });
+      const user = User.findById(id);
+      return res.send({user});
+    }catch(err){
+      return res.status(400).send({error:'Error in get trainer infos: ' + err});
+    }
+  },
+
+  async editTrainerProfile(req, res) {
     const { id } = req.userId;
     
     try{
       const user = await User.findById(id);
       if(!user.trainer)
         res.status(400).send({error:'Error user not as trainer to update profile'})
-      
+      User.findByIdAndUpdate(id, {profileImage:req.body.profileImage}, function (err, docs) { 
+        if (err){ 
+          res.status(400).send({error:'Error in update trainer profile: ' + err})
+        }
+      });
       await Trainer.findOneAndRemove({user:id});
       const tProfile = await Trainer.create({user:id,name:user.name,email:user.email,...req.body});
       return res.send({tProfile});
