@@ -1,8 +1,12 @@
 const mongoose = require("mongoose");
-const authConfig = require("../config/auth");
-const uri = authConfig.uri;
+let uri = process.env.MONGODB_URI;
 
-mongoose.connect(uri, {useNewUrlParser:true});
+if(!uri){
+    const authConfig = require("../config/auth");
+    uri = authConfig.uri;
+}
+    
+mongoose.connect(uri, {useNewUrlParser:true, useUnifiedTopology: true});
 mongoose.Promise = global.Promise;
 
 module.exports = mongoose;

@@ -2,12 +2,17 @@ const User = require("../database/models/user");
 const Trainer = require("../database/models/trainerProfile");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const authConfig = require("../config/auth");
 const crypto = require('crypto');
 const mailer = require('../mail/mailer');
+let secret = process.env.SECRET_HASH;
+
+if(!secret){
+    const authConfig = require("../config/auth");
+    secret = authConfig.secret;
+}
 
 function generateToken(params = {}){
-    return jwt.sign({id:params}, authConfig.secret, {
+    return jwt.sign({id:params}, secret, {
         expiresIn: 86400,
     } );
 }

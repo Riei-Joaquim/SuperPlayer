@@ -1,9 +1,28 @@
 const nodemailer = require('nodemailer');
-const config = require('../config/auth.json');
 const hbs = require('nodemailer-express-handlebars');
 const path = require('path');
 
-const transport = nodemailer.createTransport(config.email);
+let mailHost = process.env.MAIL_HOST;
+let mailPost = process.env.MAIL_PORT;
+let mailUser = process.env.MAIL_USER;
+let mailPass = process.env.MAIL_PASS;
+
+if(!mailHost || !mailPost || !mailUser || !mailPass){
+    const config = require('../config/auth.json');
+    mailHost = config.email.host;
+    mailPost = config.email.port;
+    mailUser = config.email.auth.user;
+    mailPass = config.email.auth.pass;
+}
+
+const transport = nodemailer.createTransport({
+    host: mailHost,
+    port: mailPost,
+    auth: {
+        user: mailUser,
+        pass: mailPass
+    }
+});
 
 transport.use(
     'compile',
