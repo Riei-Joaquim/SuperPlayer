@@ -1,5 +1,6 @@
 const mongoose = require("../index");
 const bcrypt = require("bcrypt");
+const defaultData = require("../../utils/default.json");
 
 const UserSchema = new mongoose.Schema({
     name:{
@@ -26,6 +27,7 @@ const UserSchema = new mongoose.Schema({
     },
     profileImage:{
         type:String,
+        default: defaultData.profileImage,
     },
     trainer:{
         type:Boolean,

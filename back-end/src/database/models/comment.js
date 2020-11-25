@@ -10,6 +10,10 @@ const commentShema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    ranking:{
+        type:String,
+        required:true,
+    },
     assignedTo:{
         type:String,
         required:true,

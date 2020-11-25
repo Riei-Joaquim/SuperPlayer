@@ -9,7 +9,8 @@ const routes = express.Router();
 routes.get("/", APPController.homePage);
 routes.post("/register", authController.register);
 routes.delete("/register", authVerificate, authController.deleteAccount);
-routes.post("/user/edit", authVerificate, APPController.editProfile);
+routes.put("/user/edit", authVerificate, APPController.editProfile);
+routes.get("/user", authVerificate, APPController.viewUserProfile);
 routes.post("/authenticate", authController.authenticate);
 routes.post("/authenticate/forgot_passoword", authController.forgotPassword);
 routes.post("/authenticate/reset_password", authController.resetPassword);
@@ -22,7 +23,7 @@ routes.delete("/trainer/request/:idRequest", authVerificate, APPController.delet
 routes.post("/trainer/:id/evaluate", authVerificate, APPController.trainerEvaluate);
 routes.delete("/trainer/evaluate/:idComment", authVerificate, APPController.deleteEvaluate);
 
-routes.post("/user/trainer/edit", authVerificate, APPController.editTrainerProfile);
+routes.put("/user/trainer/edit", authVerificate, APPController.editTrainerProfile);
 routes.get("/user/trainer/requests", authVerificate, APPController.viewInterested);
 
 module.exports = routes;

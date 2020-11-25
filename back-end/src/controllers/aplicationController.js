@@ -23,6 +23,17 @@ module.exports = {
       const user = await User.findById(id);
       const comments = await Comment.find({assignedTo:id});
       const trainerProfile = await Trainer.findOne({user:id});
+      let sum = 0;
+      comments.forEach(function(item){
+        sum += Number(item.ranking);
+      })
+
+      if(comments.length > 0){
+        trainerProfile.ranking = (sum/comments.length).toString();
+      }else{
+        trainerProfile.ranking = '0';
+      }
+      
       trainerProfile.name = user.name;
       trainerProfile.email = user.email;
       res.send({trainerProfile,comments});
@@ -35,12 +46,23 @@ module.exports = {
     const { id } = req.userId;
     
     try{
-      User.findByIdAndUpdate(id, {profileImage:req.body.profileImage}, function (err, docs) { 
-        if (err){ 
-          res.status(400).send({error:'Error in update user profile: ' + err})
+      const user = await User.findById(id);
+      await User.findByIdAndUpdate( id, {
+        '$set':{
+            name:req.body.name,
+            profileImage:req.body.profileImage,
         }
       });
-      const user = User.findById(id);
+
+      if(user.trainer)
+      await Trainer.findOneAndUpdate({user:id}, {
+        '$set':{
+            name:req.body.name,
+            profileImage:req.body.profileImage,
+        }
+      })
+      user.name = req.body.name;
+      user.profileImage = req.body.profileImage;
       return res.send({user});
     }catch(err){
       return res.status(400).send({error:'Error in get trainer infos: ' + err});
@@ -49,18 +71,19 @@ module.exports = {
 
   async editTrainerProfile(req, res) {
     const { id } = req.userId;
-    
     try{
       const user = await User.findById(id);
       if(!user.trainer)
-        res.status(400).send({error:'Error user not as trainer to update profile'})
-      User.findByIdAndUpdate(id, {profileImage:req.body.profileImage}, function (err, docs) { 
-        if (err){ 
-          res.status(400).send({error:'Error in update trainer profile: ' + err})
+        return res.status(400).send({error:'Error user not as trainer to update profile'});
+
+      await User.findByIdAndUpdate( id, {
+        '$set':{
+            name:req.body.name,
+            profileImage:req.body.profileImage,
         }
       });
       await Trainer.findOneAndRemove({user:id});
-      const tProfile = await Trainer.create({user:id,name:user.name,email:user.email,...req.body});
+      const tProfile = await Trainer.create({user:id,email:user.email,...req.body});
       return res.send({tProfile});
     }catch(err){
       return res.status(400).send({error:'Error in get trainer infos: ' + err});
@@ -70,10 +93,21 @@ module.exports = {
   async viewInterested(req, res) {
     const { id } = req.userId;
     try{
-      const interested = await InterestedLessons.find({assignedTo:id});
+      const interested = await InterestedLessons.find({assignedTo:id, status:'OPEN'});
       res.send(interested);
     }catch(err){
       return res.status(400).send({error:'Error in get users interested: ' + err});
+    }
+  },
+
+  async viewUserProfile(req, res) {
+    const { id } = req.userId;
+    try{
+      const user = await User.findById(id);
+      const interested = await InterestedLessons.find({email:user.email});
+      res.send(interested);
+    }catch(err){
+      return res.status(400).send({error:'Error in get user requests: ' + err});
     }
   },
 
@@ -86,7 +120,7 @@ module.exports = {
         return res.status(400).send({error:'User already as trainer'});
       User.findByIdAndUpdate(id, {trainer:true}, function (err, docs) { 
         if (err){ 
-          res.status(400).send({error:'Error in update user profile: ' + err})
+          return res.status(400).send({error:'Error in update user profile: ' + err})
         }});
       const tProfile = await Trainer.create({user:id,name:user.name,email:user.email, profileImage:user.profileImage,...req.body});
       return res.send({tProfile});
@@ -122,7 +156,12 @@ module.exports = {
         if(!user)
           return res.status(400).send({error:'User not found'});
 
-        const interested = await InterestedLessons.create({name:user.name,email:user.email,assignedTo:id,observations:req.body.observations});
+        const searchAns = await InterestedLessons.find({email:user.email,assignedTo:id, status:'OPEN'});
+        if(searchAns.length > 0)
+            return res.status(400).send({error:'Error previous requests still open'});
+
+        const idRequest = Date.now() + generateId();
+        const interested = await InterestedLessons.create({name:user.name,email:user.email,assignedTo:id,status:'OPEN', id_request:idRequest,observations:req.body.observations});
         return res.send(interested);
       }catch(err){
         return res.status(400).send({error:'Error creating interested message in profile: ' + err});
@@ -135,10 +174,14 @@ module.exports = {
   async deleteRequest(req, res) {
     const { idRequest } = req.params;
     try{
-      const request = await InterestedLessons.findById(idRequest);
+      const request = await InterestedLessons.findOne({id_request:idRequest});
       const user = await User.findById(req.userId.id);
       if(req.userId.id == request.assignedTo || req.userId.id == user._id){
-        await InterestedLessons.findByIdAndDelete(request._id);
+        await InterestedLessons.findByIdAndUpdate( request._id, {
+        '$set':{
+            status:'CLOSE'
+        }
+      });
         return res.send({status:"OK"});
       }else{
         return res.status(400).send({error:'Error user not allowed this delete'});
@@ -154,8 +197,13 @@ module.exports = {
       const idComm = Date.now() + generateId();
       try{
         const user = await User.findById(req.userId.id);
-        const comment = await Comment.create({name:user.name,email:user.email,assignedTo:id,message:req.body.message, id_comment:idComm});
-        return res.send({comment});
+        const searchAns = await InterestedLessons.find({email:user.email,assignedTo:id, status:'CLOSE'});
+        if(searchAns.length > 0){
+          const comment = await Comment.create({name:user.name,email:user.email,assignedTo:id,message:req.body.message, ranking:req.body.ranking, id_comment:idComm});
+          return res.send({comment});
+        }else{
+          return res.status(400).send({error:'Error user never took classes with this trainer'});
+        }
       }catch(err){
         return res.status(400).send({error:'Error creating comment in profile: ' +err});
       }

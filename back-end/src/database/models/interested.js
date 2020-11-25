@@ -7,6 +7,10 @@ const interestedShema = new mongoose.Schema({
     },
     email:{
         type:String,
+        required:true,
+    },
+    id_request:{
+        type:String,
         unique:true,
         required:true,
     },
@@ -15,6 +19,10 @@ const interestedShema = new mongoose.Schema({
         required:true,
     },
     observations:{
+        type:String,
+        required:false,
+    },
+    status:{
         type:String,
         required:true,
     },

@@ -29,6 +29,9 @@ const trainerSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    ranking:{
+        type:String,
+    },
     teaching:{
         type:String,
         required:true,
@@ -47,7 +50,7 @@ const trainerSchema = new mongoose.Schema({
     },
     description:{
         type:String,
-        required:false,
+        required:true,
     },
     editedAt:{
         type:Date,
