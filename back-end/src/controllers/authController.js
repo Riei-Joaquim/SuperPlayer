@@ -31,7 +31,7 @@ module.exports = {
                 token:generateToken({id:user.id}), 
             });
         }catch(err){
-            res.status(400).send({error:'Registration failed: ' + err});
+            res.status(500).send({error:'Registration failed: ' + err});
         }
     },
 
@@ -40,11 +40,8 @@ module.exports = {
 
         const user = await User.findOne({ email }).select('+password');
 
-        if(!user)
-            return res.status(400).send({error:'User not found'});
-        
-        if(!await bcrypt.compare(password, user.password))
-            return res.status(400).send({error:'Invalid password'});
+        if(!user || !await bcrypt.compare(password, user.password))
+            return res.status(401).send({error:'User or Password error'});
         
         user.password = undefined;
 

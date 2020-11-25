@@ -29,7 +29,7 @@ const UserSchema = new mongoose.Schema({
     },
     trainer:{
         type:Boolean,
-        required:true,
+        default:false,
     },
     createdAt:{
         type:Date,

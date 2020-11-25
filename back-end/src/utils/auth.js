@@ -12,7 +12,7 @@ module.exports = (req, res, next) =>{
     if(!authtoken)
         return  res.status(401).send({error:'No token provided'});
 
-    jwt.verify(authtoken, authConfig.secret, (err, decoded)=>{
+    jwt.verify(authtoken, secret, (err, decoded)=>{
         if(err)
             return res.status(401).send({error:'Token invalid'});
         

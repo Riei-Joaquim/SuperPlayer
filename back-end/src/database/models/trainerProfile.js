@@ -25,6 +25,10 @@ const trainerSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    classTitle:{
+        type:String,
+        required:true,
+    },
     teaching:{
         type:String,
         required:true,
@@ -33,15 +37,15 @@ const trainerSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
-    for_players:{
+    forPlayers:{
         type:String,
         required:true,
     },
-    trainer_mod:{
+    trainerMod:{
         type:String,
         required:true,
     },
-    desccription:{
+    description:{
         type:String,
         required:false,
     },
