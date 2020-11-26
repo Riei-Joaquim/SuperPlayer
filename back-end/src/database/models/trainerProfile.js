@@ -16,6 +16,7 @@ const trainerSchema = new mongoose.Schema({
     },
     profileImage:{
         type:String,
+        required:true,
     },
     role:{
         type:String,
