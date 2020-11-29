@@ -2,7 +2,7 @@
 # SuperPlayer
 * Plataforma web para conectar jogadores experientes e novatos que querem melhorar suas habilidades em um jogo, voltado principalmente a organização do contato entre jogadores para a disseminação de conhecimento para o cenário de eSports e jogos multiplayer.
 
-* O projeto da aplicação está disponivel para uso online, podendo ser acessada pelo [link](https://super-player-ess.herokuapp.com/)
+* O projeto da aplicação está disponivel para uso online, podendo ser acessada pelo [Link](https://super-player-ess.herokuapp.com/)
 
 # Quick Start
 ## Clone Esse repositorio
@@ -14,11 +14,12 @@
 - Crie um hash MD5 para ser utilizado com semente para os token de autenticação JWT criados
 - Crie e configure uma conta em uma API de envio de emails transacionais, similar ao tutorial **Serie API NodeJS**
 - Com as informações obtidas dos passos acima preencha os respectivos campos no arquivo ```/back-end/src/config/auth.json```
-### Executando o Back-end:
+## Execução:
+### Back-end:
 - Pelo terminal entre na pasta back-end
 - Execute o comando **npm start**, ele instalará as dependencias de pacotes e ficará executando o back-end.
 - Localmente a API poderá ser acessada no endereço ```localhost:3333``` 
-### Executando o Front-end:
+### Front-end:
 - Pelo terminal entre na pasta front-end
 - Execute o comando **npm start**, ele instalará as dependencias de pacotes e ficará executando o front-end.
 - Localmente a aplicação poderá ser acessada no endereço ```localhost:3000``` 
