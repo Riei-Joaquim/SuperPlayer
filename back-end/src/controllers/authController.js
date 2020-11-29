@@ -61,7 +61,7 @@ module.exports = {
             }else{
                 await User.findByIdAndRemove(id);
             }
-            return res.send({status:"OK"});
+            return res.send();
         }catch(err){
             return res.status(400).send({error:'Error in delete user account: ' + err});
         }

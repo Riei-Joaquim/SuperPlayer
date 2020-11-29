@@ -23,20 +23,24 @@ module.exports = {
       const user = await User.findById(id);
       const comments = await Comment.find({assignedTo:id});
       const trainerProfile = await Trainer.findOne({user:id});
-      let sum = 0;
-      comments.forEach(function(item){
-        sum += Number(item.ranking);
-      })
+      if(trainerProfile){
+        let sum = 0;
+        comments.forEach(function(item){
+          sum += Number(item.ranking);
+        });
 
-      if(comments.length > 0){
-        trainerProfile.ranking = (sum/comments.length).toString();
-      }else{
-        trainerProfile.ranking = '0';
-      }
+        if(comments.length > 0){
+          trainerProfile.ranking = (sum/comments.length).toString();
+        }else{
+          trainerProfile.ranking = '0';
+        }
       
-      trainerProfile.name = user.name;
-      trainerProfile.email = user.email;
-      res.send({trainerProfile,comments});
+        trainerProfile.name = user.name;
+        trainerProfile.email = user.email;
+        return res.send({trainerProfile,comments});
+      }else{
+        return res.status(400).send({error:'Error trainer not found'});
+      }
     }catch(err){
       return res.status(400).send({error:'Error in get trainer profile infos: '+ err});
     }
@@ -53,7 +57,7 @@ module.exports = {
         TopProfiles = await Trainer.find({$or:[{user:groups[0]._id}, {user:groups[1]._id}, {user:groups[2]._id}]});
       else if(groups.length >=2)
         TopProfiles = await Trainer.find({$or:[{user:groups[0]._id}, {user:groups[1]._id}]});
-      else
+      else if(groups.length >=1)
         TopProfiles = await Trainer.find({user:groups[0]._id});
 
       return res.send({TopProfiles});
@@ -191,7 +195,7 @@ module.exports = {
     }
   },
 
-  async deleteRequest(req, res) {
+  async updateRequest(req, res) {
     const { idRequest } = req.params;
     try{
       const request = await InterestedLessons.findOne({id_request:idRequest});
@@ -199,10 +203,11 @@ module.exports = {
       if(req.userId.id == request.assignedTo || req.userId.id == user._id){
         await InterestedLessons.findByIdAndUpdate( request._id, {
           '$set':{
-            status:'CLOSE'
+            status:req.body.status
           }
         });
-        return res.send();
+        request.status = req.body.status;
+        return res.send(request);
       }else{
         return res.status(400).send({error:'Error user not allowed this delete'});
       } 
@@ -217,18 +222,18 @@ module.exports = {
       const idComm = Date.now() + generateId();
       try{
         const user = await User.findById(req.userId.id);
-        const searchAns = await InterestedLessons.find({email:user.email,assignedTo:id, status:'CLOSE'});
+        const searchAns = await InterestedLessons.find({email:user.email,assignedTo:id, status:'DONE'});
         if(searchAns.length > 0){
           const comment = await Comment.create({name:user.name,email:user.email,assignedTo:id,message:req.body.message, ranking:req.body.ranking, id_comment:idComm});
           return res.send({comment});
         }else{
-          return res.status(400).send({error:'Error user never took classes with this trainer'});
+          return res.status(400).send({signal:1, error:'Error user never took classes with this trainer'});
         }
       }catch(err){
-        return res.status(400).send({error:'Error creating comment in profile: ' +err});
+        return res.status(500).send({error:'Error creating comment in profile: ' +err});
       }
     }else{
-      return res.status(400).send({error:'Error self user comment'});
+      return res.status(400).send({signal:2, error:'Error self user comment'});
     }
   },
 
@@ -239,7 +244,7 @@ module.exports = {
       const user = await User.findOne({email:comment.email});
       if(req.userId.id == comment.assignedTo || req.userId.id == user._id){
         await Comment.findOneAndDelete({id_comment:idComment});
-        return res.send({status:"OK"});
+        return res.send();
       }else{
         return res.status(400).send({error:'Error user not allowed this delete'});
       }  

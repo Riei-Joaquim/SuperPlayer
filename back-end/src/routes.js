@@ -13,14 +13,14 @@ routes.put("/user/edit", authVerificate, APPController.editProfile);
 routes.get("/user", authVerificate, APPController.viewUserProfile);
 routes.post("/authenticate", authController.authenticate);
 routes.post("/authenticate/forgot_passoword", authController.forgotPassword);
-routes.post("/authenticate/reset_password", authController.resetPassword);
+routes.put("/authenticate/reset_password", authController.resetPassword);
 routes.post("/maketrainer", authVerificate, APPController.makeTrainerProfile);
 routes.delete("/maketrainer", authVerificate, APPController.deleteTrainerProfile);
 routes.get("/search", APPController.search);
 routes.get("/search/highlighted", APPController.TopTrainer);
 routes.get("/trainer/:id", APPController.trainerInfo);
 routes.post("/trainer/:id/request", APPController.requestLessons);
-routes.delete("/trainer/request/:idRequest", authVerificate, APPController.deleteRequest);
+routes.put("/trainer/request/:idRequest", authVerificate, APPController.updateRequest);
 routes.post("/trainer/:id/evaluate", authVerificate, APPController.trainerEvaluate);
 routes.delete("/trainer/evaluate/:idComment", authVerificate, APPController.deleteEvaluate);
 
