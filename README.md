@@ -1,4 +1,3 @@
-* O repositório contém o projeto final para a disciplina de Engenharia de Software (IF-977) do CIn-UFPE
 
 # SuperPlayer
 * Plataforma web para conectar jogadores experientes e novatos que querem melhorar suas habilidades em um jogo, voltado principalmente a organização da disseminação de conhecimento para o cenário de eSports e jogos multiplayer.
