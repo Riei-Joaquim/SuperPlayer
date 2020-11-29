@@ -8,6 +8,10 @@
 ## Setup
 ### Dependencias:
 - [Node.js](https://nodejs.org/en/download/) instalado na maquina
+- [SuperPlayer-front](https://github.com/amb-lucas/superplayer-front/tree/master) é um submodulo então ao clonar o repositorio use o comando
+  ```shell
+    git clone --recurse-submodules -j8 <link>
+  ```
 ### Configuração:
 - Crie e configure um Cluster no MongoDB Atlas para o acesso via URI, seguindo o tutorial **Building a Simple CRUD**
 - Crie um hash MD5 para ser utilizado com semente para os token de autenticação JWT criados
@@ -33,7 +37,7 @@
 - Execute o comando **npm start**, ele instalará as dependencias de pacotes e ficará executando o back-end.
 - Localmente a API poderá ser acessada no endereço ```localhost:3333``` 
 ### Front-end:
-- Pelo terminal entre na pasta front-end
+- Pelo terminal entre na pasta SuperPlayer-front
 - Execute o comando **npm start**, ele instalará as dependencias de pacotes e ficará executando o front-end.
 - Localmente a aplicação poderá ser acessada no endereço ```localhost:3000``` 
 
