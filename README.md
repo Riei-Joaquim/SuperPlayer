@@ -5,7 +5,6 @@
 * O projeto da aplicação está disponivel para uso online, podendo ser acessada pelo [Link](https://super-player-ess.herokuapp.com/)
 
 # Quick Start
-## Clone Esse repositorio
 ## Setup
 ### Dependencias:
 - [Node.js](https://nodejs.org/en/download/) instalado na maquina
@@ -13,7 +12,21 @@
 - Crie e configure um Cluster no MongoDB Atlas para o acesso via URI, seguindo o tutorial **Building a Simple CRUD**
 - Crie um hash MD5 para ser utilizado com semente para os token de autenticação JWT criados
 - Crie e configure uma conta em uma API de envio de emails transacionais, similar ao tutorial **Serie API NodeJS**
-- Com as informações obtidas dos passos acima preencha os respectivos campos no arquivo ```/back-end/src/config/auth.json```
+- Com as informações obtidas dos passos acima crie o arquivo ```/back-end/src/config/auth.json``` com o seguinte formato e preencha os respectivos campos:
+```json
+{
+    "secret":"hashMD5",
+    "uri":"mongodbAcessURI",
+    "email":{
+        "host":"mailHost",
+        "port":"mailPort",
+        "auth":{
+            "user":"mailUser",
+            "pass":"mailPass"
+        }
+    }
+}
+```
 ## Execução:
 ### Back-end:
 - Pelo terminal entre na pasta back-end
