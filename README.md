@@ -8,7 +8,7 @@
 ## Setup
 ### Dependencias:
 - [Node.js](https://nodejs.org/en/download/) instalado na maquina
-- [SuperPlayer-front](https://github.com/amb-lucas/superplayer-front/tree/master) é um submodulo então ao clonar o repositorio use o comando
+- [SuperPlayer-front](https://github.com/amb-lucas/superplayer-front/tree/master) e [tests](https://github.com/amb-lucas/superplayer-tests/tree/main) são git-submodulos desse repositorios então ao clonar o repositorio use o comando
   ```shell
     git clone --recurse-submodules -j8 <link>
   ```
@@ -45,7 +45,8 @@
 * [Business model Canvas](https://raw.githubusercontent.com/Riei-Joaquim/SuperPlayer/main/doc/canvas/Business_canvas.jpg)
 * [Project model Canvas](https://raw.githubusercontent.com/Riei-Joaquim/SuperPlayer/main/doc/canvas/Project_canvas.jpg)
 * Para mais informações da aplicação back-end acesse o [Wiki](https://github.com/Riei-Joaquim/SuperPlayer/wiki) do repositório
-* Para mais informações da aplicação front-end e dos testes acesse o [Repositorio](https://github.com/amb-lucas/superplayer-front/tree/master)
+* Para mais detalhes da aplicação front-end [Repositorio](https://github.com/amb-lucas/superplayer-front/tree/master)
+* Para mais detalhes da aplicação de testes fim-a-fim [Repositorio](https://github.com/amb-lucas/superplayer-tests/tree/main)
 
 ## Equipe
 - [Fernando Rego Pessoa](https://github.com/frpmneto)
