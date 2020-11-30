@@ -1,3 +1,6 @@
 [submodule "superplayer-front"]
 	path = superplayer-front
 	url = https://github.com/amb-lucas/superplayer-front
+[submodule "tests"]
+	path = tests
+	url = https://github.com/amb-lucas/superplayer-tests
